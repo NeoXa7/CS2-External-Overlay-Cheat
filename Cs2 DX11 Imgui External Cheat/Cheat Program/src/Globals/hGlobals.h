@@ -31,20 +31,20 @@ namespace CS2
 namespace Offsets
 {
     // buttons;
-    inline int dwForceAttack = 0x17BC020;
-    inline int dwForceAttack2 = 0x17BC0B0;
-    inline int dwForceJump = 0x17BC530;
+    inline int dwForceAttack = 0x17BA020;
+    inline int dwForceAttack2 = 0x17BA0B0;
+    inline int dwForceJump = 0x17BA530;
 
     // offsets;
-    inline int dwEntityList = 0x1956A68; // uintptr_t
-    inline int dwLocalPlayerPawn = 0x17C37F0; // uintptr_t
-    inline int dwViewAngles = 0x19C7E58; // uintptr_t
-    inline int dwViewMatrix = 0x19B89F0; // uintptr_t
-    inline int dwSensitivity = 0x19B5038; // uintptr_t
+    inline int dwEntityList = 0x1954568; // uintptr_t
+    inline int dwLocalPlayerPawn = 0x17C17F0; // uintptr_t
+    inline int dwViewAngles = 0x19C5958; // uintptr_t
+    inline int dwViewMatrix = 0x19B64F0; // uintptr_t
+    inline int dwSensitivity = 0x19B2B38; // uintptr_t
     inline int dwSensitivity_sensitivity = 0x40; // uintptr_t
-    inline int dwGameRules = 0x19B3A58; // uintptr_t
-    inline int dwWeaponC4 = 0x195AA70; // uintptr_t
-    inline int dwPlantedC4 = 0x19BD438; // uintptr_t
+    inline int dwGameRules = 0x19B1558; // uintptr_t
+    inline int dwWeaponC4 = 0x1958570; // uintptr_t
+    inline int dwPlantedC4 = 0x19BAF38; // uintptr_t
 
     // client_dll;   
     inline int m_iTeamNum = 0x3C3; // uint8
@@ -59,7 +59,7 @@ namespace Offsets
     inline int m_Glow = 0xBA0; // CGlowProperty
     inline int m_glowColorOverride = 0x40; // Color
     inline int m_bGlowing = 0x51; // bool
-    inline int m_entitySpottedState = 0xEE0; // EntitySpottedState_t
+    inline int m_entitySpottedState = 0x10F8; // EntitySpottedState_t
     inline int m_bSpotted = 0x8; // bool
     inline int m_iszPlayerName = 0x640; // char[128]
     inline int m_pGameSceneNode = 0x308; // CGameSceneNode*
