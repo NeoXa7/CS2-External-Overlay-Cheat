@@ -2,6 +2,19 @@ Requirements
 
 Library : Microsoft DirectX SDK (June 2010)
 {
-    Include Folder
-    Lib Folder : x64 || x86
+    Include Directories
+    {
+        Include Folder      
+    }
+
+    Library Directories
+    {
+        Lib Folder : x64 || x86
+    }
+
+    Additional Dependencies
+    {
+        d3d11.lib,
+        d3dx11.lib
+    }
 }
