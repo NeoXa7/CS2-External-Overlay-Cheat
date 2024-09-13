@@ -253,8 +253,7 @@ INT APIENTRY WinMain(HINSTANCE instance, HINSTANCE, PSTR, INT cmd_show)
 			
 			Cheats::ProcessCheatInputs();
 			Cheats::InitializeBasicCheats();
-
-			Cheats::Safe_Cheats::GetMapName();
+			
 			RenderMenu();
 
 			if (!ProcessManager::IsProcessRunning(CS2::procID))
