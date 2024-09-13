@@ -28,8 +28,8 @@ namespace CS2
     inline uintptr_t ClientDll = ProcessManager::GetModuleBaseAddress(procID, L"client.dll");
     inline uintptr_t Engine2Dll = ProcessManager::GetModuleBaseAddress(procID, L"engine2.dll");
     inline uintptr_t InputsystemDll = ProcessManager::GetModuleBaseAddress(procID, L"inputsystem.dll");
-    inline uintptr_t MatchMakingDll = ProcessManager::GetModuleBaseAddress(procID, L"soundsystem.dll");
-    inline uintptr_t SoundsystemDll = ProcessManager::GetModuleBaseAddress(procID, L"matchmaking.dll");
+    inline uintptr_t MatchMakingDll = ProcessManager::GetModuleBaseAddress(procID, L"matchmaking.dll");
+    inline uintptr_t SoundsystemDll = ProcessManager::GetModuleBaseAddress(procID, L"soundsystem.dll");
 }
 
 namespace Offsets
