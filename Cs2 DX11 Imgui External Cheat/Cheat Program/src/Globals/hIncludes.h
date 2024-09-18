@@ -1,0 +1,12 @@
+#pragma once
+#include <windows.h>
+#include <tlhelp32.h>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <tchar.h>
+#include <vector>
+#include <thread> 
+#include <chrono> 
+#include <process.h>
+#include <fstream>
