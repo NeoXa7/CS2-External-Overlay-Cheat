@@ -15,7 +15,6 @@ public:
 	uintptr_t Weapon_C4;
 public:
 	char MapName[128] = { 0 };
-	char GameMode[128] = { 0 };
 public:
 	bool BombPlanted;
 	bool BombDropped;
