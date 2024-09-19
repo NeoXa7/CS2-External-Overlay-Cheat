@@ -311,12 +311,11 @@ private:
 
 		}
 
-		void GetGameInfo() // includes local player;
+		void GetGameInfo() // includes local player; 
 		{
 			ImGui::Text("Local Player : %s", player.Name);
 			ImGui::Text("Sensitivity : %.2f", player.Sensitivity);
 			ImGui::Text("Mapname : %s", game.MapName);
-			ImGui::Text("Gamemode : %s", game.GameMode);
 
 			// local team;
 			switch (player.Team)
