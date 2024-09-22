@@ -382,28 +382,28 @@ void CHEATS::SAFE_CHEATS::Item_Esp()
 {
 	for (int i = 64; i < 1024; i++)
 	{
-		DWORD64 A = Memory::ReadMemory<DWORD64>(game.EntityList + 8LL * ((i & 0x7FFF) >> 9) + 16); // Item Entity List Entry
-		if (!A)
+		DWORD64 itemEntityListEntry = Memory::ReadMemory<DWORD64>(game.EntityList + 8LL * ((i & 0x7FFF) >> 9) + 16); 
+		if (!itemEntityListEntry)
 			continue;
 
-		DWORD64 B = Memory::ReadMemory<DWORD64>(A + 120LL * (i & 0x1FF)); // Item Entity
-		if (!B)
+		DWORD64 itemEntity = Memory::ReadMemory<DWORD64>(itemEntityListEntry + 120LL * (i & 0x1FF)); // Item Entity
+		if (!itemEntity)
 			continue;
 
-		DWORD64 C = Memory::ReadMemory<DWORD64>(B + Offsets::m_pGameSceneNode); // Item Entity Node
-		Vector3 D = Memory::ReadMemory<Vector3>(C + Offsets::m_vecAbsOrigin); // Item Entity Origin
+		DWORD64 itemEntityNode = Memory::ReadMemory<DWORD64>(itemEntity + Offsets::m_pGameSceneNode); // Item Entity Node
+		Vector3 itemEntityOrigin = Memory::ReadMemory<Vector3>(itemEntityNode + Offsets::m_vecAbsOrigin); // Item Entity Origin
 
 		Vector2 ScreenPos;
-		if (!WorldToScreen(D, ScreenPos, game.ViewMatrix))
+		if (!WorldToScreen(itemEntityOrigin, ScreenPos, game.ViewMatrix))
 			continue;
 
-		DWORD64 F = Memory::ReadMemory<DWORD64>(B + 0x10);
-		DWORD64 G = Memory::ReadMemory<DWORD64>(F + 0x20);
+		DWORD64 itemInfo = Memory::ReadMemory<DWORD64>(itemInfo + 0x10);
+		DWORD64 itemTypePtr = Memory::ReadMemory<DWORD64>(itemInfo + 0x20);
 
-		if (D.x)
+		if (itemEntityOrigin.x)
 		{
 			char type[128]{};
-			Memory::ReadArray<char>(G, type, sizeof(type));
+			Memory::ReadArray<char>(itemTypePtr, type, sizeof(type));
 			string Weapons= GetWeaponType(type); 
 			string Projectiles = GetProjectileType(type); 
 			string Entity = GetEntityType(type); 
@@ -427,7 +427,7 @@ void CHEATS::SAFE_CHEATS::Item_Esp()
 				{
 					if (strstr(type, "chicken"))
 					{
-						Vector3 ChickenHeight = D + Vector3{ 0.0f, 0.0f, 20.0f }; // Box Height 72 Units;
+						Vector3 ChickenHeight = itemEntityOrigin + Vector3{ 0.0f, 0.0f, 20.0f }; // Box Height 72 Units;
 						Vector2 ChickenScreenPos;
 
 						if (!WorldToScreen(ChickenHeight, ChickenScreenPos, game.ViewMatrix))
@@ -453,7 +453,7 @@ void CHEATS::SAFE_CHEATS::Item_Esp()
 				{
 					if (strstr(type, "hostage_entity"))
 					{
-						Vector3 HostagesHeight = D + Vector3{ 0.0f, 0.0f, 72.0f }; // Box Height 72 Units;
+						Vector3 HostagesHeight = itemEntityOrigin + Vector3{ 0.0f, 0.0f, 72.0f }; // Box Height 72 Units;
 						Vector2 HostageScreenPos;
 
 						if (!WorldToScreen(HostagesHeight, HostageScreenPos, game.ViewMatrix))
