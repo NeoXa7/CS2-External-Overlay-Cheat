@@ -15,9 +15,9 @@ namespace CHEATS
 
 void CHEATS::ProcessCheatInputs()
 {
-	/*if (GetAsyncKeyState(VK_F1) & 1) {
+	if (GetAsyncKeyState(VK_F1) & 1) {
 		Flags::enableAimbot = !Flags::enableAimbot;
-	}*/
+	}
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
 		Flags::enableTriggerbot = !Flags::enableTriggerbot;
