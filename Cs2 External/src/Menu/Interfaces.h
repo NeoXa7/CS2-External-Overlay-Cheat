@@ -56,6 +56,55 @@ private:
 			}
 		}
 
+		void GetAimbotElements()
+		{
+			C_Elements::Checkbox("Aimbot", &Flags::enableAimbot);
+			if (Flags::enableAimbot)
+			{
+				C_Elements::BeginCustomizingCollapsingHeader();
+				if (ImGui::CollapsingHeader("Aimbot Settings"))
+				{
+					C_Elements::EndCustomizingCollapsingHeader();
+					C_Elements::Checkbox("Enable HotKey", &Config::Aimbot::enableHotKey);
+					C_Elements::Checkbox("Team check", &Config::Aimbot::TeamCheck);
+					C_Elements::Checkbox("Visibility check", &Config::Aimbot::VisibilityCheck);
+
+					if (Config::Aimbot::enableHotKey)
+					{
+						// Aimbot HotKey Configuration;
+						ImGui::SetNextItemWidth(100.0f);
+						C_Elements::InputText(
+							"Aimbot Key Code",
+							3.5f,
+							Config::Aimbot::AB_Default_KEYCODE_STR,
+							sizeof(Config::Aimbot::AB_Default_KEYCODE_STR),
+							ImGuiInputTextFlags_CharsHexadecimal
+						);
+
+						std::stringstream ss(Config::Aimbot::AB_Default_KEYCODE_STR);
+						ss >> std::hex >> Config::Aimbot::AB_KEYCODE;
+						ImGui::Text("Aimbot Key : %s", KeyCodeToString(Config::Aimbot::AB_KEYCODE));
+						C_Elements::LeaveLine(1);
+					}
+
+					// Aimbot Positions Combo Box Configuration;
+					C_Elements::ComboBox(
+						"Aim Position",
+						Config::Aimbot::AimPositions[Config::Aimbot::CurrentAimPosIndex],
+						&Config::Aimbot::CurrentAimPosIndex,
+						Config::Aimbot::AimPositions,
+						IM_ARRAYSIZE(Config::Aimbot::AimPositions)
+					);
+
+				}
+				else
+				{
+					C_Elements::EndCustomizingCollapsingHeader();
+					C_Elements::LeaveLine(1);
+				}
+			}
+		}
+
 		void GetRCSElements()
 		{
 			C_Elements::Checkbox("Standalone RCS", &Flags::enableRCS);
@@ -112,55 +161,6 @@ private:
 				}
 			}
 		}
-
-		void GetAimbotElements()
-		{
-			C_Elements::Checkbox("Aimbot", &Flags::enableAimbot);
-			if (Flags::enableAimbot)
-			{
-				C_Elements::BeginCustomizingCollapsingHeader();
-				if (ImGui::CollapsingHeader("Aimbot Settings"))
-				{
-					C_Elements::EndCustomizingCollapsingHeader();
-					C_Elements::Checkbox("Enable HotKey", &Config::Aimbot::enableHotKey);
-					C_Elements::Checkbox("Team check", &Config::Aimbot::TeamCheck);
-
-					if (Config::Aimbot::enableHotKey)
-					{
-						// Aimbot HotKey Configuration;
-						ImGui::SetNextItemWidth(100.0f);
-						C_Elements::InputText(
-							"Aimbot Key Code",
-							3.5f,
-							Config::Aimbot::AB_Default_KEYCODE_STR,
-							sizeof(Config::Aimbot::AB_Default_KEYCODE_STR),
-							ImGuiInputTextFlags_CharsHexadecimal
-						);
-
-						std::stringstream ss(Config::Aimbot::AB_Default_KEYCODE_STR);
-						ss >> std::hex >> Config::Aimbot::AB_KEYCODE;
-						ImGui::Text("Aimbot Key : %s", KeyCodeToString(Config::Aimbot::AB_KEYCODE));
-						C_Elements::LeaveLine(1);
-					}
-
-					// Aimbot Positions Combo Box Configuration;
-					C_Elements::ComboBox(
-						"Aim Position",
-						Config::Aimbot::AimPositions[Config::Aimbot::CurrentAimPosIndex],
-						&Config::Aimbot::CurrentAimPosIndex,
-						Config::Aimbot::AimPositions,
-						IM_ARRAYSIZE(Config::Aimbot::AimPositions)
-					);
-
-				}
-				else
-				{
-					C_Elements::EndCustomizingCollapsingHeader();
-					C_Elements::LeaveLine(1);
-				}
-			}
-		}
-
 		friend void RenderMenu();
 	};
 
@@ -551,7 +551,7 @@ void RenderMenu()
 				ImGui::TextColored(ImVec4(0, 183, 0, 255), "Safe to Use! No Memory Written!");
 				skills.GetTriggerBotElements();
 				skills.GetRCSElements();
-				memorycheats.GetAimbotElements();
+				skills.GetAimbotElements();
 				ImGui::EndTabItem();
 			}
 
