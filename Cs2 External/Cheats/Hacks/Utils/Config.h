@@ -136,6 +136,7 @@ namespace Config
 		static bool ShowFovCircle = false;
 		static ImVec4 FovCircleColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // Default White;
 		static float FovCircleThickness = 1.5f;	
-		inline bool TeamCheck = true;		
+		inline bool TeamCheck = true;	
+		inline bool VisibilityCheck = true;
 	}
 }
