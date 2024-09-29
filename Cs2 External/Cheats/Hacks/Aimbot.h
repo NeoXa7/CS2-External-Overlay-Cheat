@@ -82,10 +82,16 @@ Vector2 AIMBOT::FindClosestEnemy()
         if (!currentPawn)
             continue;
 
+        entities->UpdateEntities(currentPawn, currentController);
+
         if (currentPawn == player.localPlayerPawn)
             continue;
 
-        entities->UpdateEntities(currentPawn, currentController);
+        if (Config::Aimbot::VisibilityCheck)
+        {
+            if (!entities->IsSpotted)
+                continue;
+        }    
 
         uintptr_t BoneMatrix = GetBoneMatrix(currentPawn);
         Vector3 Head3D = SetHeadCoordinates(BoneMatrix);
