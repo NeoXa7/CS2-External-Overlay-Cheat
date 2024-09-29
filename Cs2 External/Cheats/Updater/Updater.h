@@ -24,7 +24,8 @@ std::time_t timegm(std::tm* tm) {
 
 class Updater {
 private:
-    string Github_Repo_Api = "https://api.github.com/repos/a2x/cs2-dumper/commits";
+    string Github_Repo_Api_A2X = "https://api.github.com/repos/a2x/cs2-dumper/commits";
+    string Github_Repo_Api_NeoXa7 = "https://api.github.com/repos/NeoXa7/Cpp-Updater-Class-for-CS2-Offsets/commits";
 
     const std::vector<std::pair<std::string, std::string>> Github_File_Path = {
         {"https://github.com/a2x/cs2-dumper/raw/main/output/offsets.json", "Offsets.json"},
@@ -75,7 +76,7 @@ private:
         return true;
     }
 
-    bool GetLastCommitInfo(json& commit) {
+    bool GetLastCommitInfo(string api, json& commit) {
         HINTERNET hInternet, hConnect;
 
         hInternet = InternetOpen(L"Updater", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
@@ -83,7 +84,7 @@ private:
             return false;
         }
 
-        hConnect = InternetOpenUrlA(hInternet, Github_Repo_Api.c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
+        hConnect = InternetOpenUrlA(hInternet, api.c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
         if (!hConnect) {
             InternetCloseHandle(hInternet);
             return false;
@@ -123,33 +124,57 @@ private:
 
 public:
     bool CheckAndDownload(bool prompt_update) {
-        json Commit;
+        json A2x_Commit, NeoXa7_Commit;
 
         // Get the last commit information from GitHub
-        if (!GetLastCommitInfo(Commit)) {
+        if (!GetLastCommitInfo(Github_Repo_Api_A2X, A2x_Commit)) {
             std::cout << " [Updater] Error getting last commit information from GitHub" << std::endl;
             return false;
         }
 
-        string Last_Commit_Date = Commit["date"];
-        string Last_Commit_Author_Name = Commit["name"];
+        if (!GetLastCommitInfo(Github_Repo_Api_NeoXa7, NeoXa7_Commit)) {
+            std::cout << " [Updater] Error getting last commit information from GitHub" << std::endl;
+            return false;
+        }
 
-        std::tm Commit_Date_Buffer = {};
-        std::istringstream ss(Last_Commit_Date);
-        ss >> std::get_time(&Commit_Date_Buffer, "%Y-%m-%dT%H:%M:%SZ");
+        // a2x dumper;
+        string A2X_Last_Commit_Date = A2x_Commit["date"];
+        string A2X_Last_Commit_Author_Name = A2x_Commit["name"];
 
-        // Convert to time_t and then to a time_point
-        std::time_t commit_time_t = timegm(&Commit_Date_Buffer);
-        auto CommitTimePoint = std::chrono::system_clock::from_time_t(commit_time_t);
+        std::tm Commit_Date_Buffer_A2X = {};
+        std::istringstream ssA2X(A2X_Last_Commit_Date);
+        ssA2X >> std::get_time(&Commit_Date_Buffer_A2X, "%Y-%m-%dT%H:%M:%SZ");
 
-        // Format the commit time for output
-        std::tm commit_time_tm;
-        gmtime_s(&commit_time_tm, &commit_time_t); // Use gmtime_s for thread safety
+        std::time_t commit_time_t_A2X = timegm(&Commit_Date_Buffer_A2X);
+        auto CommitTimePoint_A2X = std::chrono::system_clock::from_time_t(commit_time_t_A2X);
+
+        std::tm commit_time_tm_A2X;
+        gmtime_s(&commit_time_tm_A2X, &commit_time_t_A2X);
+
+        // neo7 
+        string NeoXa7_Last_Commit_Date = NeoXa7_Commit["date"];
+        string NeoXa7_Last_Commit_Author_Name = NeoXa7_Commit["name"];
+
+        std::tm Commit_Date_Buffer_NeoXa7 = {};
+        std::istringstream ssNeo7(NeoXa7_Last_Commit_Date);
+        ssNeo7 >> std::get_time(&Commit_Date_Buffer_NeoXa7, "%Y-%m-%dT%H:%M:%SZ");
+
+        std::time_t commit_time_t_NeoXa7 = timegm(&Commit_Date_Buffer_NeoXa7);
+        auto CommitTimePoint_NeoXa7 = std::chrono::system_clock::from_time_t(commit_time_t_NeoXa7);
+
+        std::tm commit_time_tm_NeoXa7;
+        gmtime_s(&commit_time_tm_NeoXa7, &commit_time_t_NeoXa7);
 
         // Output the message with author name and date/time
-        std::cout << " [Updater] Last GitHub Repository Update was made by "
-            << Last_Commit_Author_Name
-            << " on " << std::put_time(&commit_time_tm, "[%Y-%m-%d %H:%M:%S")
+        std::cout << " [Updater] Last A2X GitHub Repository Update was made by "
+            << A2X_Last_Commit_Author_Name
+            << " on " << std::put_time(&commit_time_tm_A2X, "[%Y-%m-%d %H:%M:%S")
+            << " (UTC)]" << std::endl;
+
+        // Output the message with author name and date/time
+        std::cout << " [Updater] Last NeoXa7 GitHub Repository Update was made by "
+            << NeoXa7_Last_Commit_Author_Name
+            << " on " << std::put_time(&commit_time_tm_NeoXa7, "[%Y-%m-%d %H:%M:%S")
             << " (UTC)]" << std::endl;
 
         // Check for each file in the Github_File_Path vector
@@ -167,25 +192,48 @@ public:
                 : std::chrono::system_clock::time_point{};
 
             // Check if the file is outdated
-            if (fileExists && lastModifiedClockTime < CommitTimePoint) {
+            if (fileExists) {
+                if (prompt_update)
+                {                   
+                    if (localPath == "Offsets.json" && lastModifiedClockTime < CommitTimePoint_A2X) {
+                        std::cout << " [Updater] " << localPath << " is outdated." << std::endl;
 
-                std::cout << " [Updater] " << localPath << " is Outdated" << std::endl;
+                        char response;
+                        std::cout << " [Updater] Do you want to update " << localPath << " to the latest version? (Y/N): ";
+                        std::cin >> response;
 
-                if (prompt_update) {
-                    char response;
-                    std::cout << " [Updater] Do you want to update " << localPath << " to the latest version? (Y/N): ";
-                    std::cin >> response;
-                    if (response == 'Y' || response == 'y') {
-                        // Download the file
-                        if (DownloadFile(url, localPath)) {
-                            std::cout << " [Updater] Successfully downloaded the latest " << localPath << "." << std::endl;
-                        }
-                        else {
-                            std::cout << " [Updater] Error: Failed to download " << localPath << ". Try downloading manually from " << url << std::endl;
-                        }
+                        if (response == 'Y' || response == 'y')
+                        {
+                            if (DownloadFile(url, localPath)) {
+                                std::cout << " [Updater] Successfully downloaded the latest " << localPath << "." << std::endl;
+                            }
+                            else {
+                                std::cout << " [Updater] Error: Failed to download " << localPath << ". Try downloading manually from " << url << std::endl;
+                            }
+                        }                
                     }
-                }
+                    else if (localPath == "Client_Dll.json" && lastModifiedClockTime < CommitTimePoint_NeoXa7) {
+                        std::cout << " [Updater] " << localPath << " is outdated." << std::endl;
 
+                        char response;
+                        std::cout << " [Updater] Do you want to update " << localPath << " to the latest version? (Y/N): ";
+                        std::cin >> response;
+
+                        if (response == 'Y' || response == 'y')
+                        {
+                            if (DownloadFile(url, localPath)) {
+                                std::cout << " [Updater] Successfully downloaded the latest " << localPath << "." << std::endl;
+                            }
+                            else {
+                                std::cout << " [Updater] Error: Failed to download " << localPath << ". Try downloading manually from " << url << std::endl;
+                            }
+                        }
+                        
+                    }
+                    else {
+                        std::cout << " [Updater] " << localPath << " is up-to-date." << std::endl;
+                    }
+                }             
             }
             else if (!fileExists) {
 
@@ -206,9 +254,7 @@ public:
 
             }
             else {
-
                 std::cout << " [Updater] " << localPath << " is Up-to-Date." << std::endl;
-
             }
         }
         return true;
