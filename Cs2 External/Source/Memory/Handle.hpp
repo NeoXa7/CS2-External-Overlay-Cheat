@@ -1,3 +1,4 @@
+/*This Handle Code just make sure that cs2 is open from steam and if its open from steam then it opens handle directly from the cs2 process . (Dont get confused lol Its never used in the source code)*/
 #include <Globals/Includes.hpp>
 
 // Function to find Steam's process handle
