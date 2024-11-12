@@ -70,7 +70,7 @@ Vector2 AIMBOT::FindClosestEnemy()
         if (!currentController)
             continue;
 
-        uint32_t pawnHandle = mem.ReadMemory<uint32_t>(currentController + Offsets::m_hPlayerPawn);
+        uintptr_t pawnHandle = mem.ReadMemory<uintptr_t>(currentController + Offsets::m_hPlayerPawn);
         if (!pawnHandle)
             continue;
 
